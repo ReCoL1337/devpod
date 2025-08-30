@@ -55,7 +55,7 @@ RUN wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-
     && mv ripgrep-14.1.1-x86_64-unknown-linux-musl/rg /usr/local/bin/ \
     && rm -rf ripgrep.tar.gz ripgrep-14.1.1-x86_64-unknown-linux-musl
 
-RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz -o go.tar.gz \
+RUN wget "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" -O go.tar.gz \
     && tar -C /usr/local -xzf go.tar.gz \
     && rm go.tar.gz
 

@@ -42,18 +42,26 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     neovim \
     tmux \
+    # SSH and networking
+    openssh-server \
+    openssh-client \
     # Common utilities
     curl \
     wget \
     git \
     unzip \
     ca-certificates \
+    sudo \
     # Required for building from source
     build-essential \
     pkg-config \
     libssl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Configure SSH
+RUN mkdir /var/run/sshd \
+    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Install ripgrep (Rust-based grep alternative)
 RUN curl -fsSL https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -o ripgrep.deb \
@@ -109,14 +117,22 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 # Set up user environment variables
 ENV PATH="/home/$USERNAME/.cargo/bin:${PATH}"
 
-# Create a sample .zshrc with useful aliases
-RUN echo 'export PATH="/usr/local/go/bin:$HOME/.cargo/bin:$PATH"' >> ~/.zshrc \
+# Create workspace directory
+RUN mkdir -p /home/$USERNAME/workspace
+
+# Create minimal .zshrc (will be replaced by dotfiles)
+RUN echo '# Minimal zsh config - will be replaced by dotfiles' > ~/.zshrc \
+    && echo 'export PATH="/usr/local/go/bin:$HOME/.cargo/bin:$PATH"' >> ~/.zshrc \
     && echo 'export GOPATH="$HOME/go"' >> ~/.zshrc \
     && echo 'export GOBIN="$GOPATH/bin"' >> ~/.zshrc \
-    && echo 'alias ll="ls -alF"' >> ~/.zshrc \
-    && echo 'alias la="ls -A"' >> ~/.zshrc \
-    && echo 'alias l="ls -CF"' >> ~/.zshrc \
-    && echo 'alias grep="rg"' >> ~/.zshrc
+    && echo 'export EDITOR="nvim"' >> ~/.zshrc \
+    && echo 'export VISUAL="nvim"' >> ~/.zshrc
 
-# Set default command
-CMD ["/bin/zsh"]
+# Expose SSH port
+EXPOSE 22
+
+# Switch back to root for SSH daemon
+USER root
+
+# Set default command to start SSH daemon
+CMD ["/usr/sbin/sshd", "-D"]

@@ -1,39 +1,42 @@
 {
-    "name": "DevOps Development Container",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "args": {
-            "USERNAME": "dev",
-            "USER_UID": "1000",
-            "USER_GID": "1000"
+    "name": "DevOps Development Container (SSH + Dotfiles)",
+    "image": "yourusername/devops-container:latest",
+    "forwardPorts": [22, 3000, 8000, 8080, 9090],
+    "portsAttributes": {
+        "22": {
+            "label": "SSH",
+            "requireLocalPort": true
+        },
+        "3000": {
+            "label": "Development Server"
+        },
+        "8000": {
+            "label": "HTTP Server"
+        },
+        "8080": {
+            "label": "Application Server"
+        },
+        "9090": {
+            "label": "Monitoring"
         }
     },
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "golang.go",
-                "rust-lang.rust-analyzer",
-                "ms-python.python",
-                "hashicorp.terraform",
-                "ms-kubernetes-tools.vscode-kubernetes-tools",
-                "ms-vscode.vscode-json",
-                "redhat.vscode-yaml"
-            ],
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "zsh",
-                "go.toolsManagement.checkForUpdates": "local",
-                "go.useLanguageServer": true,
-                "rust-analyzer.checkOnSave.command": "cargo check"
-            }
-        }
-    },
-    "forwardPorts": [3000, 8000, 8080, 9090],
-    "postCreateCommand": "go version && cargo --version && terraform --version && helm version --client && nvim --version",
-    "remoteUser": "dev",
-    "workspaceFolder": "/home/dev/workspace",
-    "mounts": [
-        "source=${localWorkspaceFolder},target=/home/dev/workspace,type=bind,consistency=cached"
+    "postCreateCommand": [
+        "bash", "-c",
+        "echo '🚀 Setting up DevOps container with dotfiles...' && echo '📁 Cloning dotfiles repository...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && echo '⚙️ Setting up dotfiles...' && if [ -f install.sh ]; then bash install.sh; elif [ -f setup.sh ]; then bash setup.sh; elif [ -f bootstrap.sh ]; then bash bootstrap.sh; elif [ -f Makefile ]; then make install || make; elif [ -f install ]; then bash install; else echo '⚠️ No install script found, you may need to manually setup dotfiles'; fi && echo '✅ Dotfiles setup complete!' && echo '🔐 Setting up SSH daemon...' && sudo service ssh start && echo '🔧 Verifying tools...' && go version && cargo --version && terraform --version && helm version --client && nvim --version && echo '🎉 Container ready! SSH: ssh dev@localhost -p 22'"
     ],
-    "runArgs": ["--init"],
-    "shutdownAction": "stopContainer"
+    "remoteUser": "dev",
+    "runArgs": [
+        "--init",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt", "seccomp=unconfined"
+    ],
+    "shutdownAction": "stopContainer",
+    "containerEnv": {
+        "SHELL": "/bin/zsh",
+        "TERM": "xterm-256color",
+        "EDITOR": "nvim",
+        "VISUAL": "nvim"
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/home/dev/workspace"
 }

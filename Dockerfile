@@ -1,21 +1,14 @@
 FROM alpine:3.19
 
-# Set build arguments - can be overridden during build
 ARG USERNAME=recol
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-# Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 ENV GO_VERSION=1.21.5
 ENV TERRAFORM_VERSION=1.6.6
 ENV HELM_VERSION=3.13.3
 
-# Create a non-root user for development
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USERNAME --shell /bin/zsh --create-home $USERNAME
-
-# Install system packages and development tools
 RUN apk update && apk add --no-cache \
     gcc \
     g++ \
@@ -50,8 +43,11 @@ RUN apk update && apk add --no-cache \
     htop \
     less
 
+RUN addgroup -g $USER_GID $USERNAME \
+    && adduser -u $USER_UID -G $USERNAME -s /bin/zsh -D $USERNAME \
+    && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 RUN mkdir -p /var/run/sshd \
-    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && ssh-keygen -A \
 
 RUN wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_x86_64-unknown-linux-musl.tar.gz" -O ripgrep.tar.gz \

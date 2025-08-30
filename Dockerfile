@@ -48,7 +48,7 @@ RUN addgroup -g $USER_GID $USERNAME \
     && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN mkdir -p /var/run/sshd \
-    && ssh-keygen -A \
+    && ssh-keygen -A 
 
 RUN wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_x86_64-unknown-linux-musl.tar.gz -O ripgrep.tar.gz \
     && tar -xzf ripgrep.tar.gz \

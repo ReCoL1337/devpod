@@ -40,6 +40,7 @@ RUN apk update && apk add --no-cache \
     openssl-dev \
     linux-headers \
     htop \
+    openrc \
     less
 
 RUN addgroup -g $USER_GID $USERNAME \

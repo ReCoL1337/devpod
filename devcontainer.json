@@ -1,0 +1,39 @@
+{
+    "name": "DevOps Development Container",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "USERNAME": "dev",
+            "USER_UID": "1000",
+            "USER_GID": "1000"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go",
+                "rust-lang.rust-analyzer",
+                "ms-python.python",
+                "hashicorp.terraform",
+                "ms-kubernetes-tools.vscode-kubernetes-tools",
+                "ms-vscode.vscode-json",
+                "redhat.vscode-yaml"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "go.toolsManagement.checkForUpdates": "local",
+                "go.useLanguageServer": true,
+                "rust-analyzer.checkOnSave.command": "cargo check"
+            }
+        }
+    },
+    "forwardPorts": [3000, 8000, 8080, 9090],
+    "postCreateCommand": "go version && cargo --version && terraform --version && helm version --client && nvim --version",
+    "remoteUser": "dev",
+    "workspaceFolder": "/home/dev/workspace",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/home/dev/workspace,type=bind,consistency=cached"
+    ],
+    "runArgs": ["--init"],
+    "shutdownAction": "stopContainer"
+}

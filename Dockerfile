@@ -6,7 +6,7 @@ ARG USER_GID=$USER_UID
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV GO_VERSION=1.21.5
-ENV TERRAFORM_VERSION=1.6.6
+ENV TERRAFORM_VERSION=1.13.1
 ENV HELM_VERSION=3.13.3
 
 RUN apk update && apk add --no-cache \
@@ -64,13 +64,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && /root/.cargo/bin/rustup default stable
 
 # Install Terraform
-RUN wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip \
+RUN wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -O terraform.zip \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/ \
     && rm terraform.zip
 
 # Install Helm
-RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -o helm.tar.gz \
+RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O helm.tar.gz \
     && tar -zxvf helm.tar.gz \
     && mv linux-amd64/helm /usr/local/bin/helm \
     && rm -rf helm.tar.gz linux-amd64

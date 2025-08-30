@@ -22,7 +22,7 @@
     },
     "postCreateCommand": [
         "zsh", "-c",
-        "echo 'Setting up DevOps container with dotfiles...' && echo 'Cloning dotfiles repository...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && echo 'Setting up dotfiles...' && stow --adopt -v . && echo 'Dotfiles setup complete!' && echo 'Setting up SSH daemon...' && sudo rc-update add sshd && sudo rc-service sshd start && echo 'Verifying tools...' && go version && cargo --version && terraform --version && helm version --client && nvim --version && echo 'Container ready! SSH: ssh recol@localhost -p 22'"
+        "echo 'Setting up DevOps container with dotfiles...' && echo 'Cloning dotfiles repository...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && echo 'Setting up dotfiles...' && stow --adopt -v . && echo 'Dotfiles setup complete!' && echo 'Setting up SSH daemon...' && sudo rc-update add sshd && echo 'Verifying tools...' && go version && cargo --version && terraform --version && helm version --client && nvim --version && echo 'Container ready'"
     ],
     "remoteUser": "recol",
     "runArgs": [

@@ -29,8 +29,7 @@ RUN apk update && apk add --no-cache \
     neovim \
     tmux \
     stow \
-    openssh-server \
-    openssh-client \
+    openssh \
     curl \
     wget \
     git \

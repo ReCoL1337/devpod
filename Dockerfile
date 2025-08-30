@@ -2,7 +2,7 @@
 FROM ubuntu:22.04
 
 # Set build arguments - can be overridden during build
-ARG USERNAME=dev
+ARG USERNAME=recol
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
@@ -42,6 +42,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     neovim \
     tmux \
+    # Dots
+    stow \
     # SSH and networking
     openssh-server \
     openssh-client \

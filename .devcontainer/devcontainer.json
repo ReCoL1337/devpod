@@ -1,6 +1,6 @@
 {
     "name": "DevPod DevOps (Neovim btw)",
-    "image": "ghcr.io/recol1337/devpod:latest",
+    "image": "ghcr.io/recol1337/devpod:main-d41d686",
     "forwardPorts": [22, 3000, 8000, 8080, 9090],
     "portsAttributes": {
         "22": {

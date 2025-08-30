@@ -1,5 +1,4 @@
-# Use specific Ubuntu version for reproducibility
-FROM ubuntu:22.04
+FROM alpine:3.19
 
 # Set build arguments - can be overridden during build
 ARG USERNAME=recol
@@ -17,61 +16,50 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USERNAME --shell /bin/zsh --create-home $USERNAME
 
 # Install system packages and development tools
-RUN apt-get update && apt-get install -y \
-    # Build tools
+RUN apk update && apk add --no-cache \
     gcc \
     g++ \
     make \
     cmake \
-    # Compression and utilities  
+    musl-dev \
     gzip \
     tree \
     diffutils \
-    # Network tools
     nmap \
-    mtr-tiny \
+    mtr \
     iftop \
-    tcpflow \
-    hping3 \
-    bmon \
-    # Log processing and shell
-    ccze \
+    tcpdump \
     zsh \
-    # Development tools
     python3 \
-    python3-pip \
+    python3-dev \
+    py3-pip \
     neovim \
     tmux \
-    # Dots
     stow \
-    # SSH and networking
     openssh-server \
     openssh-client \
-    # Common utilities
     curl \
     wget \
     git \
     unzip \
     ca-certificates \
     sudo \
-    # Required for building from source
-    build-essential \
-    pkg-config \
-    libssl-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    pkgconfig \
+    openssl-dev \
+    linux-headers \
+    htop \
+    less
 
-# Configure SSH
-RUN mkdir /var/run/sshd \
-    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN mkdir -p /var/run/sshd \
+    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && ssh-keygen -A \
 
-# Install ripgrep (Rust-based grep alternative)
-RUN curl -fsSL https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb -o ripgrep.deb \
-    && dpkg -i ripgrep.deb \
-    && rm ripgrep.deb
+RUN wget https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_x86_64-unknown-linux-musl.tar.gz" -O ripgrep.tar.gz \
+    && tar -xzf ripgrep.tar.gz \
+    && mv "ripgrep_14.1.0-1_x86_64-unknown-linux-musl/rg" /usr/local/bin/ \
+    && rm -rf ripgrep.tar.gz "ripgrep_14.1.0-1_x86_64-unknown-linux-musl"
 
-# Install Go
-RUN curl -fsSL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz -o go.tar.gz \
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz -o go.tar.gz \
     && tar -C /usr/local -xzf go.tar.gz \
     && rm go.tar.gz
 
@@ -80,13 +68,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && /root/.cargo/bin/rustup default stable
 
 # Install Terraform
-RUN curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform.zip \
+RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform.zip \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/ \
     && rm terraform.zip
 
 # Install Helm
-RUN curl -fsSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz \
+RUN wget https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz \
     && tar -zxvf helm.tar.gz \
     && mv linux-amd64/helm /usr/local/bin/helm \
     && rm -rf helm.tar.gz linux-amd64

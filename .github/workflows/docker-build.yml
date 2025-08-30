@@ -33,7 +33,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
 
       - name: Log in to GitHub Container Registry
         if: github.event_name != 'pull_request'
@@ -72,31 +72,13 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            USERNAME=dev
+            USERNAME=recol
             USER_UID=1000
             USER_GID=1000
-
-      - name: Build custom variants
-        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:developer
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ssh-ready
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            USERNAME=developer
-            USER_UID=1001
-            USER_GID=1001

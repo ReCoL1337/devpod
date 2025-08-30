@@ -1,6 +1,6 @@
 {
-    "name": "DevOps Development Container (SSH + Dotfiles)",
-    "image": "yourusername/devops-container:latest",
+    "name": "DevPod DevOps (Neovim btw)",
+    "image": "ghcr.io/recol1337/devops-container:latest",
     "forwardPorts": [22, 3000, 8000, 8080, 9090],
     "portsAttributes": {
         "22": {
@@ -22,9 +22,9 @@
     },
     "postCreateCommand": [
         "bash", "-c",
-        "echo '🚀 Setting up DevOps container with dotfiles...' && echo '📁 Cloning dotfiles repository...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && echo '⚙️ Setting up dotfiles...' && if [ -f install.sh ]; then bash install.sh; elif [ -f setup.sh ]; then bash setup.sh; elif [ -f bootstrap.sh ]; then bash bootstrap.sh; elif [ -f Makefile ]; then make install || make; elif [ -f install ]; then bash install; else echo '⚠️ No install script found, you may need to manually setup dotfiles'; fi && echo '✅ Dotfiles setup complete!' && echo '🔐 Setting up SSH daemon...' && sudo service ssh start && echo '🔧 Verifying tools...' && go version && cargo --version && terraform --version && helm version --client && nvim --version && echo '🎉 Container ready! SSH: ssh dev@localhost -p 22'"
+        "echo '🚀 Setting up DevOps container with dotfiles...' && echo '📁 Cloning dotfiles repository...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && echo '⚙️ Setting up dotfiles...' && stow --adopt -v . && echo '✅ Dotfiles setup complete!' && echo '🔐 Setting up SSH daemon...' && sudo service ssh start && echo '🔧 Verifying tools...' && go version && cargo --version && terraform --version && helm version --client && nvim --version && echo '🎉 Container ready! SSH: ssh recol@localhost -p 22'"
     ],
-    "remoteUser": "dev",
+    "remoteUser": "recol",
     "runArgs": [
         "--init",
         "--cap-add=SYS_PTRACE",
@@ -37,6 +37,6 @@
         "EDITOR": "nvim",
         "VISUAL": "nvim"
     },
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/workspace,type=bind,consistency=cached",
-    "workspaceFolder": "/home/dev/workspace"
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/recol/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/home/recol/workspace"
 }

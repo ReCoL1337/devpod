@@ -16,8 +16,8 @@ on:
       - reopened
 
 env:
-  REGISTRY: docker.io
-  IMAGE_NAME: devops-container
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -35,19 +35,19 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
 
-      - name: Log in to Docker Hub
+      - name: Log in to GitHub Container Registry
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             # Branch-based tags
             type=ref,event=branch
@@ -67,7 +67,7 @@ jobs:
             # SHA-based tag for all pushes
             type=sha,prefix={{branch}}-
 
-      - name: Build and push Docker image (SSH-enabled)
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -83,7 +83,7 @@ jobs:
             USER_UID=1000
             USER_GID=1000
 
-      - name: Build custom variants (SSH-enabled)
+      - name: Build custom variants
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         uses: docker/build-push-action@v5
         with:
@@ -92,28 +92,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:developer
-            ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:ssh-ready
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:developer
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ssh-ready
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
             USERNAME=developer
             USER_UID=1001
             USER_GID=1001
-
-  update-readme:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Update Docker Hub README
-        uses: peter-evans/dockerhub-description@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.DOCKERHUB_USERNAME }}/devops-container
-          readme-filepath: ./README.md

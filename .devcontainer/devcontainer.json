@@ -1,24 +1,20 @@
 {
     "name": "DevPod DevOps (Neovim btw)",
-    "image": "ghcr.io/recol1337/devpod:main-d41d686",
-    "forwardPorts": [22, 3000, 8000, 8080, 9090],
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+        "ghcr.io/kreemer/features/stow:1": {},
+        "ghcr.io/devcontainers/features/terraform:1": {},
+        "ghcr.io/devcontainers-extra/features/ansible:2": {},
+        "ghcr.io/duduribeiro/devcontainer-features/neovim:1": {},
+        "ghcr.io/devcontainers/features/go:1": {},
+        "ghcr.io/devcontainers/features/rust:1": {}
+    },
+    "forwardPorts": [22],
     "portsAttributes": {
         "22": {
             "label": "SSH",
             "requireLocalPort": true
-        },
-        "3000": {
-            "label": "Development Server"
-        },
-        "8000": {
-            "label": "HTTP Server"
-        },
-        "8080": {
-            "label": "Application Server"
-        },
-        "9090": {
-            "label": "Monitoring"
-        }
     },
     "postCreateCommand": [
         "zsh", "-c",
@@ -36,7 +32,5 @@
         "TERM": "xterm-256color",
         "EDITOR": "nvim",
         "VISUAL": "nvim"
-    },
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/recol/workspace,type=bind,consistency=cached",
-    "workspaceFolder": "/home/recol/workspace"
+    }
 }

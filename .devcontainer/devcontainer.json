@@ -1,37 +1,36 @@
 {
-    "name": "DevPod DevOps (Neovim btw)",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "features": {
-        "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
-        "ghcr.io/kreemer/features/stow:1": {},
-        "ghcr.io/devcontainers/features/terraform:1": {},
-        "ghcr.io/devcontainers-extra/features/ansible:2": {},
-        "ghcr.io/duduribeiro/devcontainer-features/neovim:1": {},
-        "ghcr.io/devcontainers/features/go:1": {},
-        "ghcr.io/devcontainers/features/rust:1": {}
+  "name": "DevPod DevOps (Neovim Btw)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/go:1": {},
+    "ghcr.io/devcontainers/features/rust:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true
     },
-    "forwardPorts": [22],
-    "portsAttributes": {
-        "22": {
-            "label": "SSH",
-            "requireLocalPort": true
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
     },
-    "postCreateCommand": [
-        "zsh", "-c",
-        "echo 'Setting up DevOps container with dotfiles...' && echo 'Cloning dotfiles repository...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && echo 'Setting up dotfiles...' && stow --adopt -v . && echo 'Dotfiles setup complete!' && echo 'Setting up SSH daemon...' && sudo rc-update add sshd && echo 'Verifying tools...' && go version && cargo --version && terraform --version && helm version --client && nvim --version && echo 'Container ready'"
-    ],
-    "remoteUser": "recol",
-    "runArgs": [
-        "--init",
-        "--cap-add=SYS_PTRACE",
-        "--security-opt", "seccomp=unconfined"
-    ],
-    "shutdownAction": "stopContainer",
-    "containerEnv": {
-        "SHELL": "/bin/zsh",
-        "TERM": "xterm-256color",
-        "EDITOR": "nvim",
-        "VISUAL": "nvim"
-    }
-    }
+    "ghcr.io/devcontainers-contrib/features/neovim:1": {
+      "version": "stable"
+    },
+    "ghcr.io/devcontainers-contrib/features/stow:1": {}
+  },
+  "postCreateCommand": [
+    "zsh", "-c",
+    "echo 'Setting up DevOps environment with Neovim and dotfiles...' && sudo apt-get update && sudo apt-get install -y ripgrep fd-find tree tmux && echo 'Cloning dotfiles...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && stow --adopt -v . && echo 'Verifying installations...' && go version && cargo --version && terraform --version && kubectl version --client && helm version && nvim --version && echo 'DevPod environment ready with your dotfiles!'"
+  ],
+  "remoteUser": "recol",
+  "containerEnv": {
+    "SHELL": "/bin/zsh",
+    "TERM": "xterm-256color",
+    "EDITOR": "nvim",
+    "VISUAL": "nvim"
+  }
 }

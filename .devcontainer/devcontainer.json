@@ -14,8 +14,8 @@
       "installOhMyZsh": true,
       "upgradePackages": true,
       "username": "recol",
-      "userUid": "1000",
-      "userGid": "1000"
+      "userUid": "1500",
+      "userGid": "1500"
     },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"

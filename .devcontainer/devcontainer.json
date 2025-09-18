@@ -25,7 +25,7 @@
   },
   "postCreateCommand": [
     "zsh", "-c",
-    "echo 'Setting up DevOps environment with Neovim and dotfiles...' && sudo apt-get update && sudo apt-get install -y ripgrep fd-find tree tmux && echo 'Cloning dotfiles...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && stow --adopt -v . && echo 'Verifying installations...' && go version && cargo --version && terraform --version && kubectl version --client && helm version && nvim --version && echo 'DevPod environment ready with your dotfiles!'"
+    "echo 'Setting up DevOps environment with Neovim and dotfiles...' && sudo apt-get update && sudo apt-get install -y ripgrep fd-find tree tmux && echo 'Cloning dotfiles...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && stow --adopt -v ."
   ],
   "remoteUser": "recol",
   "containerEnv": {

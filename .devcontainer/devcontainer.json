@@ -8,6 +8,7 @@
     "ghcr.io/devcontainers/features/rust:1": {},
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/ansible:2": {},
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": true,
       "configureZshAsDefaultShell": true,
@@ -25,7 +26,7 @@
   },
   "postCreateCommand": [
     "zsh", "-c",
-    "echo 'Setting up DevOps environment with Neovim and dotfiles...' && sudo apt-get update && sudo apt-get install -y ripgrep fd-find tree tmux && echo 'Cloning dotfiles...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && cd ~/.dotfiles && stow --adopt -v ."
+    "echo 'Setting up DevOps environment with Neovim and dotfiles...' && sudo apt-get update && sudo apt-get install -y ripgrep fd-find tree tmux && echo 'Cloning dotfiles...' && git clone https://github.com/ReCoL1337/.dotfiles.git ~/.dotfiles && git clone https://github.com/ReCoL1337/nvim.git ~/.dotfiles/config/nvim && curl -s https://ohmyposh.dev/install.sh | zsh -s"
   ],
   "remoteUser": "recol",
   "containerEnv": {

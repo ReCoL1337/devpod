@@ -17,9 +17,7 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
     },
-    "ghcr.io/devcontainers-contrib/features/neovim:1": {
-      "version": "stable"
-    },
+    "ghcr.io/duduribeiro/devcontainer-features/neovim:1": {},
     "ghcr.io/kreemer/features/stow:1": {}
   },
   "postCreateCommand": [

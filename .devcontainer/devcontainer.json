@@ -12,7 +12,10 @@
       "installZsh": true,
       "configureZshAsDefaultShell": true,
       "installOhMyZsh": true,
-      "upgradePackages": true
+      "upgradePackages": true,
+      "username": "recol",
+      "userUid": "1000",
+      "userGid": "1000"
     },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"

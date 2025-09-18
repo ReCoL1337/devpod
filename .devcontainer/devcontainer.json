@@ -1,6 +1,6 @@
 {
   "name": "DevPod DevOps (Neovim Btw)",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "image": "ubuntu:24.04",
   "features": {
     "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
     "ghcr.io/devcontainers/features/terraform:1": {},

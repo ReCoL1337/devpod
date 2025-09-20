@@ -9,7 +9,7 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers-extra/features/ansible:2": {},
-    "hcr.io/devcontainers-extra/features/fzf:1": {},
+    "ghcr.io/devcontainers-extra/features/fzf:1": {},
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": true,
       "configureZshAsDefaultShell": true,
